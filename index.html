@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pursuit — Track your applications</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #121212;
+      --surface: #1a1a1a;
+      --surface-raised: #212121;
+      --border: #2c2c2c;
+      --text: #e8e8e6;
+      --text-dim: #8c8c8c;
+      --accent: #3ddbd9;
+      --accent-dim: #1f5d5c;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      background-image: radial-gradient(circle at 20% 20%, rgba(61, 219, 217, 0.06), transparent 40%);
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .wordmark {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0 0 0.4rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin: 0 0 0.3rem;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin: 0 0 2rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .field {
+      margin-bottom: 1.1rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 0.85rem;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.15s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s ease, transform 0.05s ease;
+    }
+
+    .btn:active { transform: scale(0.99); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0a1f1e;
+      margin-bottom: 0.6rem;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    #message {
+      font-size: 0.82rem;
+      margin-top: 1rem;
+      min-height: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .text-error { color: #e07a7a; }
+    .text-success { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <p class="wordmark">PURSUIT</p>
+    <h1>Track every application</h1>
+    <p class="subtitle">One place for every role you've applied to.</p>
+
+    <form id="auth-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@email.com" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" id="login-btn" class="btn btn-primary">Log in</button>
+      <button type="button" id="signup-btn" class="btn btn-secondary">Create account</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const supabaseUrl = 'https://yxradhjfcowveuswhsml.supabase.co'
+    const supabaseKey = 'sb_publishable_Bh31112URU6Nd5KtoPVXqQ_VXyRRUkA'
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+    const message = document.getElementById('message')
+
+    document.getElementById('login-btn').addEventListener('click', async function(e) {
+        e.preventDefault()
+        const email = document.getElementById('email').value
+        const password = document.getElementById('password').value
+
+        if (email === '' || password === '') {
+            message.textContent = 'Please enter both your email and password.'
+            message.className = 'text-error'
+            return
+        }
+
+        const result = await client.auth.signInWithPassword({ email: email, password: password })
+
+        if (result.error) {
+            message.textContent = result.error.message
+            message.className = 'text-error'
+        } else {
+            window.location.href = 'dashboard.html'
+        }
+    })
+
+    document.getElementById('signup-btn').addEventListener('click', async function(e) {
+        e.preventDefault()
+        const email = document.getElementById('email').value
+        const password = document.getElementById('password').value
+
+        if (email === '' || password === '') {
+            message.textContent = 'Please enter both your email and password.'
+            message.className = 'text-error'
+            return
+        }
+
+        const result = await client.auth.signUp({ email: email, password: password })
+
+        if (result.error) {
+            message.textContent = result.error.message
+            message.className = 'text-error'
+        } else {
+            message.textContent = 'Check your email to confirm your account.'
+            message.className = 'text-success'
+        }
+    })
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pursuit — Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #121212;
+      --surface: #1a1a1a;
+      --surface-raised: #212121;
+      --border: #2c2c2c;
+      --text: #e8e8e6;
+      --text-dim: #8c8c8c;
+      --accent: #3ddbd9;
+      --accent-dim: #1f5d5c;
+      --amber: #d9a93d;
+      --green: #5cb86a;
+      --red: #d97a7a;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wordmark {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+    }
+
+    #welcome {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin: 0.2rem 0 0;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-primary { background: var(--accent); color: #0a1f1e; }
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0 0 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 1.9rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+    }
+
+    .stat-applied { color: var(--text); }
+    .stat-interview { color: var(--amber); }
+    .stat-offer { color: var(--green); }
+    .stat-rejected { color: var(--red); }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 1rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1.3rem;
+    }
+
+    .field { display: flex; flex-direction: column; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 0.4rem;
+    }
+
+    input, select, textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    textarea { resize: vertical; min-height: 60px; }
+
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    #add-btn { flex: 1; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.7rem 1.3rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface-raised);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 0.85rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--surface-raised); }
+
+    .date-cell {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-applied { background: rgba(232,232,230,0.1); color: var(--text-dim); }
+    .badge-interview { background: rgba(217,169,61,0.15); color: var(--amber); }
+    .badge-offer { background: rgba(92,184,106,0.15); color: var(--green); }
+    .badge-rejected { background: rgba(217,122,122,0.15); color: var(--red); }
+
+    .row-actions { display: flex; gap: 0.5rem; }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .icon-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+    .empty-state {
+      padding: 2.5rem 1.3rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+    @media (max-width: 640px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .topbar {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      table, thead, tbody, tr {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody td {
+        display: block;
+        border-bottom: none;
+        padding: 0.4rem 1.3rem;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        padding: 0.6rem 0;
+      }
+
+      tbody td:first-child {
+        font-weight: 600;
+        padding-top: 0.8rem;
+      }
+
+      tbody td:last-child {
+        padding-bottom: 0.8rem;
+      }
+      .panel-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      #search-input {
+        width: 100%;
+      }
+
+      .panel-header > div {
+        width: 100%;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <p class="wordmark">PURSUIT</p>
+      <p id="welcome">Loading…</p>
+    </div>
+    <button id="logout-btn" class="btn btn-ghost">Log out</button>
+  </div>
+
+  <main>
+
+    <div class="stats">
+      <div class="stat-card">
+        <p class="stat-label">Applied</p>
+        <p class="stat-value stat-applied" id="stat-total">0</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Interview</p>
+        <p class="stat-value stat-interview" id="stat-interview">0</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Offer</p>
+        <p class="stat-value stat-offer" id="stat-offer">0</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Rejected</p>
+        <p class="stat-value stat-rejected" id="stat-rejected">0</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2 id="form-title">Add application</h2>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="company">Company</label>
+          <input type="text" id="company" placeholder="e.g. Standard Bank">
+        </div>
+        <div class="field">
+          <label for="role">Role</label>
+          <input type="text" id="role" placeholder="e.g. Junior Developer">
+        </div>
+        <div class="field">
+          <label for="date_applied">Date applied</label>
+          <input type="date" id="date_applied">
+        </div>
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" placeholder="Optional — contact name, salary discussed, next steps…"></textarea>
+        </div>
+        <div class="form-actions">
+          <button id="add-btn" class="btn btn-primary">Add application</button>
+          <button id="cancel-edit-btn" class="btn btn-ghost" style="display:none;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <h2>My applications</h2>
+        <div style="display: flex; gap: 0.6rem;">
+          <input type="text" id="search-input" placeholder="Search company or role…" style="width: 200px;">
+          <select id="filter-status">
+            <option value="">All statuses</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Date applied</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="applications-body"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script>
+    const supabaseUrl = 'https://yxradhjfcowveuswhsml.supabase.co'
+    const supabaseKey = 'sb_publishable_Bh31112URU6Nd5KtoPVXqQ_VXyRRUkA'
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+    let editingId = null
+    let allApplications = []
+
+    async function loadUser() {
+      const result = await client.auth.getUser()
+      const user = result.data.user
+
+      if (!user) {
+        window.location.href = 'index.html'
+        return
+      }
+
+      document.getElementById('welcome').textContent = user.email
+    }
+
+    function badgeClass(status) {
+      if (status === 'Interview') return 'badge-interview'
+      if (status === 'Offer') return 'badge-offer'
+      if (status === 'Rejected') return 'badge-rejected'
+      return 'badge-applied'
+    }
+
+    function updateStats(applications) {
+      let total = applications.length
+      let interview = 0
+      let offer = 0
+      let rejected = 0
+
+      for (let i = 0; i < applications.length; i++) {
+        const status = applications[i].status
+        if (status === 'Interview') interview++
+        if (status === 'Offer') offer++
+        if (status === 'Rejected') rejected++
+      }
+
+      document.getElementById('stat-total').textContent = total
+      document.getElementById('stat-interview').textContent = interview
+      document.getElementById('stat-offer').textContent = offer
+      document.getElementById('stat-rejected').textContent = rejected
+    }
+
+    async function loadApplications() {
+      const result = await client
+        .from('applications')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (result.error) {
+        console.log('Error loading applications:', result.error.message)
+        return
+      }
+
+      allApplications = result.data
+      applyFilters()
+    }
+
+    function clearForm() {
+      document.getElementById('company').value = ''
+      document.getElementById('role').value = ''
+      document.getElementById('date_applied').value = ''
+      document.getElementById('status').value = 'Applied'
+      document.getElementById('notes').value = ''
+
+      editingId = null
+      document.getElementById('form-title').textContent = 'Add application'
+      document.getElementById('add-btn').textContent = 'Add application'
+      document.getElementById('cancel-edit-btn').style.display = 'none'
+    }
+
+    function attachDeleteListeners() {
+      const deleteButtons = document.querySelectorAll('.delete-btn')
+
+      for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener('click', async function() {
+          const idToDelete = deleteButtons[i].getAttribute('data-id')
+
+          const result = await client
+            .from('applications')
+            .delete()
+            .eq('id', idToDelete)
+
+          if (result.error) {
+            console.log('Error deleting:', result.error.message)
+          } else {
+            loadApplications()
+          }
+        })
+      }
+    }
+
+    function attachEditListeners(applications) {
+      const editButtons = document.querySelectorAll('.edit-btn')
+
+      for (let i = 0; i < editButtons.length; i++) {
+        editButtons[i].addEventListener('click', function() {
+          const idToEdit = editButtons[i].getAttribute('data-id')
+
+          let appToEdit = null
+          for (let j = 0; j < applications.length; j++) {
+            if (applications[j].id === idToEdit) {
+              appToEdit = applications[j]
+            }
+          }
+
+          document.getElementById('company').value = appToEdit.company
+          document.getElementById('role').value = appToEdit.role
+          document.getElementById('date_applied').value = appToEdit.date_applied
+          document.getElementById('status').value = appToEdit.status
+          document.getElementById('notes').value = appToEdit.notes
+
+          editingId = appToEdit.id
+          document.getElementById('form-title').textContent = 'Edit application'
+          document.getElementById('add-btn').textContent = 'Save changes'
+          document.getElementById('cancel-edit-btn').style.display = 'inline-block'
+
+          document.getElementById('company').scrollIntoView({ behavior: 'smooth', block: 'center' })
+        })
+      }
+    }
+
+    function applyFilters() {
+      const searchText = document.getElementById('search-input').value.toLowerCase()
+      const statusFilter = document.getElementById('filter-status').value
+
+      let filtered = []
+
+      for (let i = 0; i < allApplications.length; i++) {
+        const app = allApplications[i]
+
+        const matchesSearch = app.company.toLowerCase().includes(searchText) ||
+                              app.role.toLowerCase().includes(searchText)
+
+        const matchesStatus = statusFilter === '' || app.status === statusFilter
+
+        if (matchesSearch && matchesStatus) {
+          filtered.push(app)
+        }
+      }
+
+      renderTable(filtered)
+    }
+
+    function renderTable(applications) {
+      const tbody = document.getElementById('applications-body')
+      tbody.innerHTML = ''
+
+      updateStats(allApplications)
+
+      if (applications.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">No applications match your search.</div></td></tr>'
+        return
+      }
+
+      for (let i = 0; i < applications.length; i++) {
+        const app = applications[i]
+
+        const row = document.createElement('tr')
+        row.innerHTML =
+          '<td>' + app.company + '</td>' +
+          '<td>' + app.role + '</td>' +
+          '<td class="date-cell">' + app.date_applied + '</td>' +
+          '<td><span class="badge ' + badgeClass(app.status) + '">' + app.status + '</span></td>' +
+          '<td><div class="row-actions">' +
+            '<button class="icon-btn edit-btn" data-id="' + app.id + '">Edit</button>' +
+            '<button class="icon-btn danger delete-btn" data-id="' + app.id + '">Delete</button>' +
+          '</div></td>'
+
+        tbody.appendChild(row)
+      }
+
+      attachDeleteListeners()
+      attachEditListeners(applications)
+    }
+
+    document.getElementById('search-input').addEventListener('input', applyFilters)
+    document.getElementById('filter-status').addEventListener('change', applyFilters)
+
+    document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+      clearForm()
+    })
+
+    document.getElementById('add-btn').addEventListener('click', async function() {
+      const result = await client.auth.getUser()
+      const user = result.data.user
+
+      const company = document.getElementById('company').value
+      const role = document.getElementById('role').value
+      const date_applied = document.getElementById('date_applied').value
+      const status = document.getElementById('status').value
+      const notes = document.getElementById('notes').value
+
+      if (editingId === null) {
+        const insertResult = await client
+          .from('applications')
+          .insert({
+            user_id: user.id,
+            company: company,
+            role: role,
+            date_applied: date_applied,
+            status: status,
+            notes: notes
+          })
+
+        if (insertResult.error) {
+          console.log('Error adding application:', insertResult.error.message)
+        } else {
+          console.log('Application added!')
+          clearForm()
+        }
+
+      } else {
+        const updateResult = await client
+          .from('applications')
+          .update({
+            company: company,
+            role: role,
+            date_applied: date_applied,
+            status: status,
+            notes: notes
+          })
+          .eq('id', editingId)
+
+        if (updateResult.error) {
+          console.log('Error updating application:', updateResult.error.message)
+        } else {
+          console.log('Application updated!')
+          clearForm()
+        }
+      }
+
+      loadApplications()
+    })
+
+    document.getElementById('logout-btn').addEventListener('click', async function() {
+      await client.auth.signOut()
+      window.location.href = 'index.html'
+    })
+
+    loadUser()
+    loadApplications()
+  </script>
+
+</body>
+</html>
