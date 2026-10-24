@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import AddApplicationForm from "@/components/applications/AddApplicationForm";
 import LiveApplications from "@/components/applications/LiveApplications";
 import { redirect } from "next/navigation";
+import PageHeader from "@/components/layout/PageHeader";
+import Link from "next/link";
 
 async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ error?: string }> }){
     await connection();
@@ -18,15 +20,20 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
 
     const { data: applications, error: dbError } = await supabase
        .from("applications")
-       .select("id, title, organisation, type, status, deadline")
+       .select("id, title, organisation, type, status, deadline, source_url, notes")
        .order("deadline", { ascending: true, nullsFirst: false });
 
     if (dbError){
         throw dbError;  
     } 
     return (
-        <main className="mx-auto max-w-md p-4">
-            
+        
+        <div>
+            <PageHeader
+                title="Applications"
+                subtitle="Track every opportunity in one place."
+                action={<Link href="#add-application" className="rounded-xl bg-primary-dark px-5 py-3 font-semibold text-white">+ Add Application</Link>}
+            />
             {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
             <LiveApplications initial={applications} userId={user.id} />
 
@@ -34,11 +41,11 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
 
            
 
-            <section className="mt-8">
+            <section className="mt-8" id="add-application">
                 <h2 className="text-xl font-bold">Add an application</h2>
                 <div className="mt-4"><AddApplicationForm /></div>
             </section>
-        </main>
+        </div>
     );
 }
 

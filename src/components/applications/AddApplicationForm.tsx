@@ -4,7 +4,7 @@ export default function AddApplicationForm(){
     return(
         <form action={addApplication} className="space-y-4">
             <label className="block text-sm font-medium">
-                Title
+                Role / Title <span className="text-rose-500">*</span>
                 <input 
                     name="title"
                     type="text"
@@ -15,7 +15,7 @@ export default function AddApplicationForm(){
                 />
             </label>
             <label className="block text-sm font-medium">
-                Organisation name
+                Organisation name <span className="text-rose-500">*</span>
                 <input 
                     name="organisation"
                     type="text"
@@ -26,7 +26,7 @@ export default function AddApplicationForm(){
                 />
             </label>
             <label className="block text-sm font-medium">
-                Type
+                Application Type <span className="text-rose-500">*</span>
                 <select name="type" required className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base">
                     <option value="job">Job</option>
                     <option value="internship">Internship</option>
@@ -38,7 +38,7 @@ export default function AddApplicationForm(){
                 </select>
             </label>
             <label className="block text-sm font-medium">
-                Deadline 
+                Deadline <span className="text-rose-500">*</span>
                 <input 
                     name="deadline"
                     required
@@ -47,7 +47,7 @@ export default function AddApplicationForm(){
                 />
             </label>
             <label className="block text-sm font-medium">
-                Status
+                Status <span className="text-rose-500">*</span>
                 <select name="status" required className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base">
                      <option value="Preparing">Preparing</option>
                     <option value="Applied">Applied</option>
@@ -58,11 +58,11 @@ export default function AddApplicationForm(){
                 </select>
             </label>
             <label className="block text-sm font-medium">
-                Application link (optional)
+                Application link
                 <input name="source_url" type="url" maxLength={500} placeholder="https://careers.company.com/apply" className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base" />
             </label>
             <label className="block text-sm font-medium">
-                Notes (optional)
+                Notes
                 <textarea name="notes" rows={3} maxLength={1000} className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base" />
             </label>
             <button type="submit" className="w-full rounded-xl bg-primary-dark p-3 font-semibold text-white">

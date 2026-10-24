@@ -41,7 +41,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
             <div className="px-4 pt-5 mb-7">
                 <Link
                     onClick={onClose}
-                    href="/applications?new=true"
+                    href="/applications#add-application"
                     className="flex items-center justify-center gap-2 rounded-lg bg-primary-dark px-4 py-3 font-semibold text-white"
                 >
                     <Plus size={20} />

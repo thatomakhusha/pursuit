@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import PageHeader from "@/components/layout/PageHeader";
+import { StatusBadge, TypeBadge } from "@/components/ui/Badges";
 
 export type Application = {
     id: number; 
@@ -11,7 +12,10 @@ export type Application = {
     type: string;
     status: string;
     deadline: string | null;
+    source_url: string | null;
+    notes: string | null;
 };
+
 export default function LiveApplications({ initial, userId }: { initial: Application[]; userId: string }) {
     const [items, setItems] = useState<Application[]>(initial);
 
@@ -53,25 +57,30 @@ export default function LiveApplications({ initial, userId }: { initial: Applica
 
     return (
     <div>
-        <PageHeader
-                title="Applications"
-                subtitle={`${items.length} applications tracked · Drag cards to update status`}
-                action={<button className="rounded-xl bg-sky-400 px-5 py-3 text-white">+ Add Application</button>}
-        />
-        <h1 className="text-3xl font-bold">Your applications ({items.length})</h1>
+        <p className="text-sm text-slate-500">{items.length} applications tracked</p>
         {items.length === 0 ? (
             <p className="mt-4 text-text-secondary">Nothing here yet. Add your first application below.</p>
         ) : (
             <ul aria-live="polite" className="mt-4 space-y-3">
             {items.map((a) => (
                 <li key={a.id} className="rounded-xl border border-gray-200 bg-surface p-4">
-                    <p className="font-semibold">{a.title}</p>
-                    <p className="text-sm text-text-secondary">
-                        {a.organisation ?? "No organisation"} · {a.type.replace("_", " ")}
-                    </p>
-                    <p className="mt-2 text-sm">
-                        Status: {a.status} · Due: {a.deadline ?? "No deadline"}
-                    </p>
+                    <div className="flex items-start justify-between gap-3">
+                        <p className="font-semibold">{a.title}</p>
+                        <TypeBadge type={a.type} />
+                    </div>
+                    <p className="text-sm text-slate-500">{a.organisation ?? "No organisation"}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                        <StatusBadge status={a.status} />
+                        <span className="text-slate-500">Due: {a.deadline ?? "No deadline"}</span>
+                    </div>
+                    {a.source_url && (
+                        <a href={a.source_url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm font-medium text-primary-dark underline">
+                            Open application page
+                        </a>
+                    )}
+                    {a.notes && (
+                        <p className="mt-3 whitespace-pre-line rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{a.notes}</p>
+                    )}
                 </li>
             ))}
         </ul>
