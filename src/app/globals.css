@@ -1,26 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme { 
+  /* Brand */
+  --color-primary: #6fa8dc;
+  --color-primary-hover: #4d8dc4;
+  --color-primary-hover-mid: #5a97cb;
+  --color-primary-light: #e8f2fb;
+  --color-primary-dark: #2f6ba3;
+
+  /* Backgrounds */
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+
+  /* Sidebar */
+  --color-sidebar: #111827;
+  --color-sidebar-hover: #1f2937;
+  --color-sidebar-active: #1d3a52;
+
+  /* Status */
+  --color-status-saved: #9ca3af;
+  --color-status-preparing: #f59e0b;
+  --color-status-applied: #6fa8dc;
+  --color-status-assessment: #f97316;
+  --color-status-interview: #8b5cf6;
+  --color-status-offer: #22c55e;
+  --color-status-rejected: #ef4444;
+
+  /* Typography */
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #ffffff;
 }
