@@ -23,11 +23,11 @@ const links = [
 ];
 
 
-export default function Sidebar(){
+export default function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }){
     const pathname = usePathname();
 
     return (
-        <aside className="flex h-full w-64 shrink-0 flex-col bg-sidebar text-slate-300">
+        <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar text-slate-300 transition-transform motion-reduce:transition-none md:static md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
             <div className="border-b border-white/10 p-5">
                 <Link href="/" className="flex items-center gap-2">
                     <div className="bg-primary p-1.5 text-white rounded-md">
@@ -40,8 +40,9 @@ export default function Sidebar(){
             </div>
             <div className="px-4 pt-5 mb-7">
                 <Link
+                    onClick={onClose}
                     href="/applications?new=true"
-                    className="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-semibold text-white"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-primary-dark px-4 py-3 font-semibold text-white"
                 >
                     <Plus size={20} />
                     Add Application
@@ -54,6 +55,7 @@ export default function Sidebar(){
                         <Link
                             key={href}
                             href={href}
+                            onClick={onClose}
                             className={`flex items-center gap-3 rounded-lg px-4 py-3 ${active ? "bg-sidebar-active text-sky-400" : "hover:bg-sidebar-hover"}`}
                         >
                             <Icon size={22} />
