@@ -46,5 +46,14 @@ export function assessDeadlineRisk(apps: AppInput[], now: Date): RiskItem[] {
         items.push({ id: a.id, title: a.title, daysLeft: days, level: riskLevel(days), order: 0 });
     }
 
+    items.sort((x, y) => x.daysLeft - y.daysLeft);
+    let n = 0;
+    for (const item of items) {
+        if (item.level !== "overdue") {
+            n++;
+            item.order = n;
+        }
+    }
+
     return items;
 }
