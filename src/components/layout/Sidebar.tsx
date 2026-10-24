@@ -54,7 +54,7 @@ export default function Sidebar(){
                         <Link
                             key={href}
                             href={href}
-                            className={`flex items-center gap-3 rounded-lg px-4 py-3 ${active ? "bg-slate-800 text-sky-400" : "hover:bg-slate-800/50"}`}
+                            className={`flex items-center gap-3 rounded-lg px-4 py-3 ${active ? "bg-sidebar-active text-sky-400" : "hover:bg-sidebar-hover"}`}
                         >
                             <Icon size={22} />
                             {label}
@@ -66,7 +66,7 @@ export default function Sidebar(){
                 <form action={logout}>
                     <button
                         type="submit"
-                        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 hover:bg-slate-800/50"
+                        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 hover:bg-sidebar-hover"
                     >
                         <LogOut size={22} />
                         Sign out
