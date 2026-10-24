@@ -2,8 +2,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/(auth)/actions";
+import { connection } from "next/server";
 
 async function DashboardContent(){
+    await connection();
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
