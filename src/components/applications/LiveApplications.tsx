@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import PageHeader from "@/components/layout/PageHeader";
 
 export type Application = {
     id: number; 
@@ -52,6 +53,11 @@ export default function LiveApplications({ initial, userId }: { initial: Applica
 
     return (
     <div>
+        <PageHeader
+                title="Applications"
+                subtitle={`${items.length} applications tracked · Drag cards to update status`}
+                action={<button className="rounded-xl bg-sky-400 px-5 py-3 text-white">+ Add Application</button>}
+        />
         <h1 className="text-3xl font-bold">Your applications ({items.length})</h1>
         {items.length === 0 ? (
             <p className="mt-4 text-text-secondary">Nothing here yet. Add your first application below.</p>

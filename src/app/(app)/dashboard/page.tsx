@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/(auth)/actions";
 import { connection } from "next/server";
 import { assessDeadlineRisk } from "@/lib/intelligence/risk";
+import PageHeader from "@/components/layout/PageHeader";
 
 async function DashboardContent(){
     await connection();
@@ -18,7 +19,11 @@ async function DashboardContent(){
     const risks = assessDeadlineRisk(applications ?? [], new Date());
 
     return <main className="mx-auto max-w-md p-4">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <PageHeader
+            title={`Good morning ${user.email}`}
+            subtitle={`Here's your application overview for today.`}
+            action={""}
+        />
         <p>Logged in as {user.email}</p>
 
         <section className="mt-6">

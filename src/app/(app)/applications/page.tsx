@@ -26,6 +26,7 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
     } 
     return (
         <main className="mx-auto max-w-md p-4">
+            
             {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
             <LiveApplications initial={applications} userId={user.id} />
 
