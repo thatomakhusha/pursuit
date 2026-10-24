@@ -1,3 +1,10 @@
+import Navbar from "@/components/landing/Navbar"
+
 export default function Home() {
-  return <h1>Pursuit</h1>;
+  return (
+    <>
+      <Navbar/>
+    </>
+  )
+  
 }
