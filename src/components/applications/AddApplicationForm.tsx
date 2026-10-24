@@ -1,4 +1,4 @@
-import { addApplication } from "@/app/applications/actions";
+import { addApplication } from "@/app/(app)/applications/actions";
 
 export default function AddApplicationForm(){
     return(
