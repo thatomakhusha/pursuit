@@ -11,6 +11,8 @@ async function DashboardContent(){
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    if (!user) redirect("/login");
+    
     const { data: profile } = await supabase
         .from("profiles")
         .select("display_name")
@@ -18,7 +20,7 @@ async function DashboardContent(){
         .maybeSingle();
     const firstName = profile?.display_name?.split(" ")[0];
 
-    if (!user) redirect("/login");
+    
 
     const { data: applications, error: dbError } = await supabase
        .from("applications")
