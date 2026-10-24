@@ -24,9 +24,13 @@ export async function signup(formData: FormData){
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
     const name = String(formData.get("name")?? "").trim();
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
     if (password.length < 8) {
         redirect("/signup?error=" + encodeURIComponent("Password needs 8+ characters"));
+    }
+    if (password !== confirmPassword) {
+        redirect("/signup?error=" + encodeURIComponent("Passwords do not match"));
     }
 
     const { error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
