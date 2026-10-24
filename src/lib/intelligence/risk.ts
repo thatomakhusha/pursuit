@@ -39,7 +39,7 @@ export function assessDeadlineRisk(apps: AppInput[], now: Date): RiskItem[] {
         if (a.deadline === null) {
             continue;
         }
-        if (a.status !== "Saved" && a.status !== "Planning") {
+        if (a.status !== "Saved" && a.status !== "Planning" && a.status !== "Preparing") {
             continue;
         }
         const days = daysLeft(a.deadline, now);
