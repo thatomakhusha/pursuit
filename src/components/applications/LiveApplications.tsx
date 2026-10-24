@@ -11,32 +11,43 @@ export type Application = {
     status: string;
     deadline: string | null;
 };
-
-export default function LiveApplications({ initial, userId }: { initial: Application[]; userId: string }){
+export default function LiveApplications({ initial, userId }: { initial: Application[]; userId: string }) {
     const [items, setItems] = useState<Application[]>(initial);
-   useEffect(() => {
+
+    useEffect(() => {
         const supabase = createClient();
+        let channel: ReturnType<typeof supabase.channel> | null = null;
+        let cancelled = false;
 
-        const channel = supabase
-            .channel(`applications-${userId}`)
-            .on(
-                "postgres_changes",
-                { event: "*", schema: "public", table: "applications", filter: `user_id=eq.${userId}` },
-                (payload) => {
-                    if (payload.eventType === "INSERT") {
-                        setItems((prev) => prev.some((a) => a.id === (payload.new as Application).id) ? prev : [...prev, payload.new as Application]);
-                    } else if (payload.eventType === "UPDATE") {
-                        setItems((prev) => prev.map((a) => a.id === (payload.new as Application).id ? (payload.new as Application) : a));
-                    } else if (payload.eventType === "DELETE") {
-                        setItems((prev) => prev.filter((a) => a.id !== (payload.old as { id: number }).id));
+        async function start() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (cancelled) return;
+            if (session) supabase.realtime.setAuth(session.access_token);
+
+            channel = supabase
+                .channel(`applications-${userId}`)
+                .on(
+                    "postgres_changes",
+                    { event: "*", schema: "public", table: "applications", filter: `user_id=eq.${userId}` },
+                    (payload) => {
+                        if (payload.eventType === "INSERT") {
+                            setItems((prev) => prev.some((a) => a.id === (payload.new as Application).id) ? prev : [...prev, payload.new as Application]);
+                        } else if (payload.eventType === "UPDATE") {
+                            setItems((prev) => prev.map((a) => a.id === (payload.new as Application).id ? (payload.new as Application) : a));
+                        } else if (payload.eventType === "DELETE") {
+                            setItems((prev) => prev.filter((a) => a.id !== (payload.old as { id: number }).id));
+                        }
                     }
-                }
-            )
-            .subscribe();
+                )
+                .subscribe((status) => console.log("realtime:", status));
+            }
 
-        return () => {
-            supabase.removeChannel(channel);
-        };
+            start();
+
+            return () => {
+                cancelled = true;
+                if (channel) supabase.removeChannel(channel);
+            };
     }, [userId]);
 
     return (
