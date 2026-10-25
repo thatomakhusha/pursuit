@@ -7,7 +7,7 @@ import PageHeader from "@/components/layout/PageHeader";
 import { RiskBadge } from "@/components/ui/Badges";
 import StatsCard from "@/components/ui/StatsCard";
 import { FileText, TrendingUp, Users, Clock } from "lucide-react";
-import ApplicationJourney from "@/components/ui/ApplicationJournery";
+import ApplicationJourney from "@/components/ui/ApplicationJourney";
 
 async function DashboardContent(){
     await connection();
@@ -27,9 +27,9 @@ async function DashboardContent(){
 
     const { data: applications, error: dbError } = await supabase
        .from("applications")
-       .select("id, title, status, deadline, created_at");
+       .select("id, title, organisation, type, status, deadline, source_url, created_at, updated_at");
     if (dbError) throw dbError;
-
+    
     const now = new Date();
     const risks = assessDeadlineRisk(applications ?? [], now);
     
@@ -39,7 +39,8 @@ async function DashboardContent(){
     const active =  all.filter((a) => a.status !== "Offer" && a.status !== "Rejected").length;
     const interviews =  all.filter((a) => a.status === "Interview").length;
     const dueThisWeek =  risks.filter((r) => r.daysLeft >= 0 && r.daysLeft <= 7).length;
-
+    const recent = [...all].sort((x, y) => new Date(y.updated_at).getTime() - new Date(x.updated_at).getTime()).slice(0, 5);
+    
     return( 
         <div>
             <PageHeader
@@ -52,9 +53,13 @@ async function DashboardContent(){
                 <StatsCard icon={Users} tint="bg-violet-50 text-violet-700" label="Interviews" value={interviews}/>
                 <StatsCard icon={Clock} tint="bg-amber-50 text-amber-700" label="Upcoming Deadlines" value={dueThisWeek} note="next 7 days"/>
             </div>
-            <div className="grid gap-4 lg:grid-cols-2">
-                <ApplicationJourney/>
-                <div></div>
+            <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-2">
+                    <ApplicationJourney items={recent} />
+                </div>
+                <div className="space-y-6">
+                    
+                </div>
             </div>
             <section className="mt-6">
                 <h2 className="text-xl font-bold">Deadline risk</h2>
