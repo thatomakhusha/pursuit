@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, ExternalLink } from "lucide-react";
 import { StatusBadge, TypeBadge } from "@/components/ui/Badges";
 import ApplicationTimeline from "@/components/ui/ApplicationTimeline";
+import QuickActions from "@/components/applications/QuickActions";
 
 async function ApplicationContent({ params }: { params: Promise<{ id: string }> }) {
     await connection();
@@ -81,6 +82,9 @@ async function ApplicationContent({ params }: { params: Promise<{ id: string }> 
 
             <div className="mt-6">
                 <ApplicationTimeline status={application.status} />
+            </div>
+            <div className="mt-6">
+                <QuickActions id={application.id} status={application.status} />
             </div>
         </div>
     );
