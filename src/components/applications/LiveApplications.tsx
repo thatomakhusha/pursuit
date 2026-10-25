@@ -19,18 +19,21 @@ export default function LiveApplications({ initial, userId }: { initial: Applica
     const [items, setItems] = useState<Application[]>(initial);
 
     useEffect(() => {
-        console.log("scroll effect ran, hash =", window.location.hash);
-        const id = window.location.hash.slice(1);
-        if (!id.startsWith("application-")) return;
+        const timer = setTimeout(() => {                                   
+            const id = window.location.hash.slice(1);
+            if (!id.startsWith("application-")) return;
 
-        const el = document.getElementById(id);
-        if (!el) return;
+            const el = document.getElementById(id);
+            if (!el) return;
 
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-        document.querySelectorAll("[id^='application-']").forEach((card) => {
-            card.classList.remove("ring-2", "ring-primary-dark");
-        });
-        el.classList.add("ring-2", "ring-primary-dark");
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            document.querySelectorAll("[id^='application-']").forEach((card) => {
+                card.classList.remove("ring-2", "ring-primary-dark");
+            });                                                            
+            el.classList.add("ring-2", "ring-primary-dark");
+            setTimeout(() => el.classList.remove("ring-2", "ring-primary-dark"), 2000);
+        }, 150);
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
