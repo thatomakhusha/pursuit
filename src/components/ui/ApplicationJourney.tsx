@@ -13,7 +13,7 @@ type JourneyItem = {
 
 export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
     return(
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+        <div className="h-full rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
 
             <div className="flex items-center justify-between">
                 <h2 className="font-bold">Your Application Journey</h2>
@@ -39,7 +39,7 @@ export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
                                 <p className="text-[0.8rem] text-slate-500">{a.title}</p>
                                 <p className="mt-1 text-xs text-slate-500">Deadline: {a.deadline ?? "No deadline"}</p>
                             </div>
-                            
+
                             <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
                                 <TypeBadge type={a.type} />
                                 <StatusBadge status={a.status} />
