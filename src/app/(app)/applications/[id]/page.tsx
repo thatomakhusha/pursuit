@@ -9,6 +9,7 @@ import ApplicationTimeline from "@/components/ui/ApplicationTimeline";
 import QuickActions from "@/components/applications/QuickActions";
 import NotesCard from "@/components/applications/NotesCard";
 import EditApplication from "@/components/applications/EditApplications";
+import DeleteApplication from "@/components/applications/DeleteApplication";
 
 async function ApplicationContent({ params }: { params: Promise<{ id: string }> }) {
     await connection();
@@ -101,7 +102,7 @@ async function ApplicationContent({ params }: { params: Promise<{ id: string }> 
                     <div className="mt-6">
                         <NotesCard id={application.id} notes={application.notes} />
                     </div>
-
+                    <DeleteApplication id={application.id} />    
                 </div>
 
             </div>
