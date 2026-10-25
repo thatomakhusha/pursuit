@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ArrowLeft, Calendar, ExternalLink } from "lucide-react";
 import { StatusBadge, TypeBadge } from "@/components/ui/Badges";
+import ApplicationTimeline from "@/components/ui/ApplicationTimeline";
 
 async function ApplicationContent({ params }: { params: Promise<{ id: string }> }) {
     await connection();
@@ -28,6 +29,7 @@ async function ApplicationContent({ params }: { params: Promise<{ id: string }> 
                 <ArrowLeft size={16} aria-hidden="true" />
                 Back to Applications
             </Link>
+
             <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
                 <div className="flex items-center gap-4">
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xl font-bold text-primary-dark">
@@ -75,6 +77,10 @@ async function ApplicationContent({ params }: { params: Promise<{ id: string }> 
                         View application portal
                     </a>
                 )}
+            </div>
+
+            <div className="mt-6">
+                <ApplicationTimeline status={application.status} />
             </div>
         </div>
     );
