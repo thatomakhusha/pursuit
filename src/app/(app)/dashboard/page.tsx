@@ -8,6 +8,8 @@ import StatsCard from "@/components/ui/StatsCard";
 import { FileText, TrendingUp, Users, Clock } from "lucide-react";
 import ApplicationJourney from "@/components/ui/ApplicationJourney";
 import UpcomingDeadlines from "@/components/ui/UpcomingDeadlines";
+import Link from "next/link";
+import PipelineSummary from "@/components/ui/PipelineSummary";
 
 async function DashboardContent(){
     await connection();
@@ -31,9 +33,14 @@ async function DashboardContent(){
     if (dbError) throw dbError;
     
     const now = new Date();
-    const risks = assessDeadlineRisk(applications ?? [], now);
-    
     const all = applications ?? [];
+    const risks = assessDeadlineRisk(applications ?? [], now);
+
+    const statusOrder = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
+    const pipeline = statusOrder
+        .map((s) => ({ status: s, count: all.filter((a) => a.status === s).length }))
+        .filter((p) => p.count > 0);
+
     const total = all.length;
     const addedThisMonth =  all.filter((a) => now.getTime() - new Date(a.created_at).getTime() < 30 * 86_400_000).length;
     const active =  all.filter((a) => a.status !== "Offer" && a.status !== "Rejected").length;
@@ -58,7 +65,14 @@ async function DashboardContent(){
                     <ApplicationJourney items={recent} />
                 </div>
                 <div className="space-y-6">
-                    <UpcomingDeadlines risks={risks} />        
+                    <UpcomingDeadlines risks={risks} />
+                    <PipelineSummary items={pipeline} />
+                    <Link
+                        href="/applications#add-application"
+                        className="block rounded-2xl bg-primary-dark p-4 text-center font-semibold text-white"
+                    >
+                        + Add New Application
+                    </Link>
                 </div>
             </div>
         </div>

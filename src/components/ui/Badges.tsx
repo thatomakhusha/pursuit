@@ -1,6 +1,6 @@
 import type { RiskLevel } from "@/lib/intelligence/risk";
 
-const STATUS_STYLES: Record<string, { pill: string; dot: string }> = {
+export const STATUS_STYLES: Record<string, { pill: string; dot: string }> = {
   Saved: { pill: "bg-gray-100 text-gray-700", dot: "bg-gray-400" },
   Preparing: { pill: "bg-amber-50 text-amber-800", dot: "bg-amber-500" },
   Applied: { pill: "bg-sky-50 text-sky-800", dot: "bg-sky-500" },
