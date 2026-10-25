@@ -29,7 +29,7 @@ export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
 
                     <li key={a.id} className="-mx-2 rounded-xl px-2">
 
-                        <Link href={`/applications#application-${a.id}`} className="group flex items-center gap-4 py-4 hover:bg-slate-50">
+                        <Link href={`/applications/${a.id}`} className="group flex items-center gap-4 py-4 hover:bg-slate-50">
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 font-bold text-primary-dark">
                                 {a.organisation?.[0]?.toUpperCase() ?? "?"}
                             </div>
