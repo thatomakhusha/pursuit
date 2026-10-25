@@ -36,11 +36,6 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
             />
             {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
             <KanbanBoard initial={applications} userId={user.id} />
-            
-            <section className="mt-8" id="add-application">
-                <h2 className="text-xl font-bold">Add an application</h2>
-                <div className="mt-4"><AddApplicationForm /></div>
-            </section>
         </div>
     );
 }

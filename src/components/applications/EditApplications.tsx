@@ -6,7 +6,15 @@ import { createClient } from "@/lib/supabase/client";
 import { Pencil, X } from "lucide-react";
 import type { Application } from "@/types/application";
 
-const TYPES = ["Job", "Internship", "Graduate Programme", "Scholarship", "University Application", "Bursary"];
+const TYPES = [
+    { value: "job", label: "Job" },
+    { value: "internship", label: "Internship" },
+    { value: "learnership", label: "Learnership" },
+    { value: "graduate_programme", label: "Graduate Programme" },
+    { value: "bursary", label: "Bursary" },
+    { value: "nsfas", label: "NSFAS" },
+    { value: "university", label: "University" },
+];
 const STATUSES = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
 
 export default function EditApplication({ application }: { application: Application }) {
@@ -103,7 +111,7 @@ export default function EditApplication({ application }: { application: Applicat
                                 onChange={(e) => update("type", e.target.value)}
                                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-normal"
                             >
-                                {TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                                {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                             </select>
                         </label>
 
