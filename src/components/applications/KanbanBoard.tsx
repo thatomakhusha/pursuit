@@ -79,7 +79,9 @@ export default function KanbanBoard({ initial, userId }: { initial: Application[
                             className="w-72 shrink-0"
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
-                                const id = Number(e.dataTransfer.getData("text/plain"));
+                                e.preventDefault();
+                                const id = Number(e.dataTransfer.getData("application/x-pursuit-id"));
+                                if (!id) return;
                                 moveApplication(id, status);
                             }}
                         >
@@ -95,7 +97,7 @@ export default function KanbanBoard({ initial, userId }: { initial: Application[
                                     <div
                                         key={a.id}
                                         draggable
-                                        onDragStart={(e) => e.dataTransfer.setData("text/plain", String(a.id))}
+                                        onDragStart={(e) => e.dataTransfer.setData("application/x-pursuit-id", String(a.id))}
                                         className="cursor-grab active:cursor-grabbing"
                                     >
                                         <ApplicationCard application={a} />
