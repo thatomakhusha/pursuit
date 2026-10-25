@@ -15,6 +15,7 @@ export default function ApplicationCard({ application: a }: { application: Appli
             <div>
                 <p className="mt-3 font-semibold">{a.organisation ?? "No organisation"}</p>
                 <p className="text-sm text-slate-500">{a.title}</p>
+                {a.notes && <p className="mt-2 line-clamp-2 text-xs text-slate-500">{a.notes}</p>}
             </div>
             
             <div className="mt-3 flex items-center justify-between text-sm text-slate-400">
