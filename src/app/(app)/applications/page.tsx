@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import AddApplicationForm from "@/components/applications/AddApplicationForm";
 import KanbanBoard from "@/components/applications/KanbanBoard";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/layout/PageHeader";

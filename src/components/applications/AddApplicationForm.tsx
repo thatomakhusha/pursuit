@@ -1,4 +1,5 @@
 import { addApplication } from "@/app/(app)/applications/actions";
+import Link from "next/link";
 
 export default function AddApplicationForm(){
     return(
@@ -66,9 +67,14 @@ export default function AddApplicationForm(){
                 Notes
                 <textarea name="notes" rows={3} maxLength={1000} className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base" />
             </label>
-            <button type="submit" className="w-full rounded-xl bg-primary-dark p-3 font-semibold text-white">
-                Add application
-            </button>
+            <div className="flex gap-3">
+                <button type="submit" className="rounded-xl bg-primary-dark px-6 py-3 font-semibold text-white">
+                    Save Application
+                </button>
+                <Link href="/applications" className="rounded-xl border border-gray-200 px-6 py-3 font-semibold">
+                    Cancel
+                </Link>
+            </div>
         </form>
     );
 }
