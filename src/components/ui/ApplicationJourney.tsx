@@ -29,8 +29,8 @@ export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
                                 {a.organisation?.[0]?.toUpperCase() ?? "?"}
                             </div>
                             <div className="min-w-0 flex-1">
-                                <p className="font-semibold text-slate-900">{a.organisation ?? "No organisation"}</p>
-                                <p className="text-sm text-slate-500">{a.title}</p>
+                                <p className="font-semibold text-sm text-slate-900">{a.organisation ?? "No organisation"}</p>
+                                <p className="text-[0.8rem] text-slate-500">{a.title}</p>
                                 <p className="mt-1 text-xs text-slate-500">Deadline: {a.deadline ?? "No deadline"}</p>
                             </div>
                             <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
