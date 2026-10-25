@@ -9,12 +9,12 @@ export async function addApplication(formData: FormData){
     const type = String(formData.get("type") ?? "").trim();
     const organisation = String(formData.get("organisation") ?? "").trim();
     const deadline =String(formData.get("deadline") ?? "");
-    const status = String(formData.get("status") ?? "Preparing").trim();
+    const status = String(formData.get("status") ?? "Saved").trim();
     const sourceUrl = String(formData.get("source_url") ?? "").trim();
     const notes = String(formData.get("notes") ?? "").trim();
 
     const allowedTypes = ["job", "internship", "learnership", "graduate_programme", "bursary", "university", "nsfas"];
-    const allowedStatuses = ["Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
+    const allowedStatuses = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
 
     if (title.length > 120 || title.length < 2) {
         redirect("/applications?error=" + encodeURIComponent("Title must be 2 to 120 characters"))

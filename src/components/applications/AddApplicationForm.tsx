@@ -49,7 +49,8 @@ export default function AddApplicationForm(){
             <label className="block text-sm font-medium">
                 Status <span className="text-rose-500">*</span>
                 <select name="status" required className="mt-1 w-full rounded-xl border border-gray-200 bg-surface p-3 text-base">
-                     <option value="Preparing">Preparing</option>
+                    <option value="Saved">Saved</option>
+                    <option value="Preparing">Preparing</option>
                     <option value="Applied">Applied</option>
                     <option value="Assessment">Assessment</option>
                     <option value="Interview">Interview</option>
