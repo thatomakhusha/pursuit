@@ -7,6 +7,7 @@ import PageHeader from "@/components/layout/PageHeader";
 import { RiskBadge } from "@/components/ui/Badges";
 import StatsCard from "@/components/ui/StatsCard";
 import { FileText, TrendingUp, Users, Clock } from "lucide-react";
+import ApplicationJourney from "@/components/ui/ApplicationJournery";
 
 async function DashboardContent(){
     await connection();
@@ -50,6 +51,10 @@ async function DashboardContent(){
                 <StatsCard icon={TrendingUp} tint="bg-emerald-50 text-emerald-700" label="Active Applications" value={active}/>
                 <StatsCard icon={Users} tint="bg-violet-50 text-violet-700" label="Interviews" value={interviews}/>
                 <StatsCard icon={Clock} tint="bg-amber-50 text-amber-700" label="Upcoming Deadlines" value={dueThisWeek} note="next 7 days"/>
+            </div>
+            <div className="grid gap-4 lg:grid-cols-2">
+                <ApplicationJourney/>
+                <div></div>
             </div>
             <section className="mt-6">
                 <h2 className="text-xl font-bold">Deadline risk</h2>
