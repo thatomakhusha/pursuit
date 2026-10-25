@@ -46,7 +46,7 @@ async function DashboardContent(){
     const active =  all.filter((a) => a.status !== "Offer" && a.status !== "Rejected").length;
     const interviews =  all.filter((a) => a.status === "Interview").length;
     const dueThisWeek =  risks.filter((r) => r.daysLeft >= 0 && r.daysLeft <= 7).length;
-    const recent = [...all].sort((x, y) => new Date(y.updated_at).getTime() - new Date(x.updated_at).getTime()).slice(0, 5);
+    const recent = [...all].sort((x, y) => new Date(y.updated_at).getTime() - new Date(x.updated_at).getTime()).slice(0, 7);
     
     return( 
         <div>
