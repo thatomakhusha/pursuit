@@ -5,7 +5,6 @@ import {
   Target,
   LayoutDashboard,
   FolderKanban,
-  FileText,
   User,
   Settings,
   LogOut,
@@ -17,7 +16,6 @@ import { logout } from "@/app/(auth)/actions";
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/applications", label: "Applications", icon: FolderKanban },
-  { href: "/documents", label: "Documents", icon: FileText },
   { href: "/profile", label: "Profile", icon: User },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
