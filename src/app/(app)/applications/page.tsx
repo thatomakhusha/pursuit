@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import AddApplicationForm from "@/components/applications/AddApplicationForm";
-import LiveApplications from "@/components/applications/LiveApplications";
+import KanbanBoard from "@/components/applications/KanbanBoard";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/layout/PageHeader";
 import Link from "next/link";
@@ -35,12 +35,8 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
                 action={<Link href="#add-application" className="rounded-xl bg-primary-dark px-5 py-3 font-semibold text-white">+ Add Application</Link>}
             />
             {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-            <LiveApplications initial={applications} userId={user.id} />
-
-           
-
-           
-
+            <KanbanBoard initial={applications} userId={user.id} />
+            
             <section className="mt-8" id="add-application">
                 <h2 className="text-xl font-bold">Add an application</h2>
                 <div className="mt-4"><AddApplicationForm /></div>
