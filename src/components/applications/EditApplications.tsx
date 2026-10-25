@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Pencil, X } from "lucide-react";
-import type { Application } from "./LiveApplications";
+import type { Application } from "@/types/application";
 
 const TYPES = ["Job", "Internship", "Graduate Programme", "Scholarship", "University Application", "Bursary"];
 const STATUSES = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];

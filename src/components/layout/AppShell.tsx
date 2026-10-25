@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
+import { Suspense } from "react";
 
 export default function AppShell({ children }: { children: React.ReactNode }){
     const [open, setOpen] = useState(false);
 
     return (
         <div className="flex h-dvh bg-slate-50">
-            <Sidebar open={open} onClose={() => setOpen(false)} />
+            <Suspense fallback={<div className="hidden w-64 shrink-0 bg-slate-900 lg:block" />}>
+                <Sidebar open={open} onClose={() => setOpen(false)} />
+            </Suspense>
 
             {open && (
                 <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={() => setOpen(false)} aria-hidden="true" />

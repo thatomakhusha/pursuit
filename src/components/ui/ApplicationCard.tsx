@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Calendar, ExternalLink } from "lucide-react";
 import { TypeBadge } from "@/components/ui/Badges";
-import type { Application } from "../applications/LiveApplications";
+import type { Application } from "@/types/application";
 
 export default function ApplicationCard({ application: a }: { application: Application }) {
     return (

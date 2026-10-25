@@ -31,7 +31,7 @@ async function ApplicationsContent({ searchParams }: { searchParams: Promise<{ e
         <div>
             <PageHeader
                 title="Applications"
-                subtitle="Track every opportunity in one place."
+                subtitle="Track every opportunity in one place · Drag cards to update status"
                 action={<Link href="#add-application" className="rounded-xl bg-primary-dark px-5 py-3 font-semibold text-white">+ Add Application</Link>}
             />
             {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}

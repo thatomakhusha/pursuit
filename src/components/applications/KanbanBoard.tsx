@@ -3,7 +3,7 @@
 import ApplicationCard from "@/components/ui/ApplicationCard";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { Application } from "./LiveApplications";
+import type { Application } from "@/types/application";
 import { STATUS_STYLES } from "@/components/ui/Badges";
 
 const COLUMNS = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
@@ -14,7 +14,7 @@ export default function KanbanBoard({ initial, userId }: { initial: Application[
     useEffect(() => {
         setItems(initial);
     }, [initial]);
-    
+
     async function moveApplication(id: number, newStatus: string) {
         const current = items.find((a) => a.id === id);
         if (!current || current.status === newStatus) return;
