@@ -5,6 +5,8 @@ import { connection } from "next/server";
 import { assessDeadlineRisk } from "@/lib/intelligence/risk";
 import PageHeader from "@/components/layout/PageHeader";
 import { RiskBadge } from "@/components/ui/Badges";
+import StatsCard from "@/components/ui/StatsCard";
+import { FileText, TrendingUp, Users, Clock } from "lucide-react";
 
 async function DashboardContent(){
     await connection();
@@ -24,9 +26,18 @@ async function DashboardContent(){
 
     const { data: applications, error: dbError } = await supabase
        .from("applications")
-       .select("id, title, status, deadline");
+       .select("id, title, status, deadline, created_at");
     if (dbError) throw dbError;
-    const risks = assessDeadlineRisk(applications ?? [], new Date());
+
+    const now = new Date();
+    const risks = assessDeadlineRisk(applications ?? [], now);
+    
+    const all = applications ?? [];
+    const total = all.length;
+    const addedThisMonth =  all.filter((a) => now.getTime() - new Date(a.created_at).getTime() < 30 * 86_400_000).length;
+    const active =  all.filter((a) => a.status !== "Offer" && a.status !== "Rejected").length;
+    const interviews =  all.filter((a) => a.status === "Interview").length;
+    const dueThisWeek =  risks.filter((r) => r.daysLeft >= 0 && r.daysLeft <= 7).length;
 
     return( 
         <div>
@@ -34,7 +45,12 @@ async function DashboardContent(){
                 title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
                 subtitle="Here's your application overview for today."
             />
-
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <StatsCard icon={FileText} tint="bg-sky-50 text-sky-700" label="Total Applications" value={total} note={`${addedThisMonth} this month`} />
+                <StatsCard icon={TrendingUp} tint="bg-emerald-50 text-emerald-700" label="Active Applications" value={active}/>
+                <StatsCard icon={Users} tint="bg-violet-50 text-violet-700" label="Interviews" value={interviews}/>
+                <StatsCard icon={Clock} tint="bg-amber-50 text-amber-700" label="Upcoming Deadlines" value={dueThisWeek} note="next 7 days"/>
+            </div>
             <section className="mt-6">
                 <h2 className="text-xl font-bold">Deadline risk</h2>
                 {risks.length === 0 ? (
