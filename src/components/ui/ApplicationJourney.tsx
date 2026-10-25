@@ -9,7 +9,6 @@ type JourneyItem = {
     type: string;
     status: string;
     deadline: string | null;
-    source_url: string | null;
 };
 
 export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
@@ -24,24 +23,22 @@ export default function ApplicationJourney({ items }: { items: JourneyItem[] }){
             </div>
             <ul className="mt-4 divide-y divide-slate-100">
                 {items.map((a) => (
-                    <li key={a.id} className="flex items-center gap-4 py-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 font-bold text-primary-dark">
-                            {a.organisation?.[0]?.toUpperCase() ?? "?"}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="font-semibold text-slate-900">{a.organisation ?? "No organisation"}</p>
-                            <p className="text-sm text-slate-500">{a.title}</p>
-                            <p className="mt-1 text-xs text-slate-500">Deadline: {a.deadline ?? "No deadline"}</p>
-                        </div>
-                        <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
-                            <TypeBadge type={a.type} />
-                            <StatusBadge status={a.status} />
-                            {a.source_url && (
-                                <a href={a.source_url} target="_blank" rel="noopener noreferrer" aria-label="Open application page" className="text-slate-400 hover:text-primary-dark">
-                                <ArrowUpRight size={16} />
-                                </a>
-                            )}
-                        </div>
+                    <li key={a.id} className="-mx-2 rounded-xl px-2">
+                        <Link href={`/applications#application-${a.id}`} className="group flex items-center gap-4 py-4 hover:bg-slate-50">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 font-bold text-primary-dark">
+                                {a.organisation?.[0]?.toUpperCase() ?? "?"}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-slate-900">{a.organisation ?? "No organisation"}</p>
+                                <p className="text-sm text-slate-500">{a.title}</p>
+                                <p className="mt-1 text-xs text-slate-500">Deadline: {a.deadline ?? "No deadline"}</p>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
+                                <TypeBadge type={a.type} />
+                                <StatusBadge status={a.status} />
+                                <ArrowUpRight size={16} aria-hidden="true" className="shrink-0 text-slate-400 group-hover:text-primary-dark" />
+                            </div>
+                        </Link>
                     </li>
                 ))}
             </ul>

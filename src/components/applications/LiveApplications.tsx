@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import PageHeader from "@/components/layout/PageHeader";
 import { StatusBadge, TypeBadge } from "@/components/ui/Badges";
 
 export type Application = {
@@ -18,6 +17,21 @@ export type Application = {
 
 export default function LiveApplications({ initial, userId }: { initial: Application[]; userId: string }) {
     const [items, setItems] = useState<Application[]>(initial);
+
+    useEffect(() => {
+        console.log("scroll effect ran, hash =", window.location.hash);
+        const id = window.location.hash.slice(1);
+        if (!id.startsWith("application-")) return;
+
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.querySelectorAll("[id^='application-']").forEach((card) => {
+            card.classList.remove("ring-2", "ring-primary-dark");
+        });
+        el.classList.add("ring-2", "ring-primary-dark");
+    }, []);
 
     useEffect(() => {
         const supabase = createClient();
@@ -44,7 +58,7 @@ export default function LiveApplications({ initial, userId }: { initial: Applica
                         }
                     }
                 )
-                .subscribe((status) => console.log("realtime:", status));
+                .subscribe();
             }
 
             start();
@@ -63,7 +77,7 @@ export default function LiveApplications({ initial, userId }: { initial: Applica
         ) : (
             <ul aria-live="polite" className="mt-4 space-y-3">
             {items.map((a) => (
-                <li key={a.id} className="rounded-xl border border-gray-200 bg-surface p-4">
+                <li key={a.id} id={`application-${a.id}`} className="scroll-mt-6 rounded-xl border border-gray-200 bg-surface p-4">
                     <div className="flex items-start justify-between gap-3">
                         <p className="font-semibold">{a.title}</p>
                         <TypeBadge type={a.type} />
