@@ -68,7 +68,7 @@ async function DashboardContent(){
                     <UpcomingDeadlines risks={risks} />
                     <PipelineSummary items={pipeline} />
                     <Link
-                        href="/applications#add-application"
+                        href="/applications/new"
                         className="block rounded-2xl bg-primary-dark p-4 text-center font-semibold text-white"
                     >
                         + Add New Application

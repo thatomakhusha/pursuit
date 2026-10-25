@@ -17,25 +17,25 @@ export async function addApplication(formData: FormData){
     const allowedStatuses = ["Saved", "Preparing", "Applied", "Assessment", "Interview", "Offer", "Rejected"];
 
     if (title.length > 120 || title.length < 2) {
-        redirect("/applications?error=" + encodeURIComponent("Title must be 2 to 120 characters"))
+        redirect("/applications/new?error=" + encodeURIComponent("Title must be 2 to 120 characters"))
     }
     if (!allowedTypes.includes(type)) {
-        redirect("/applications?error=" + encodeURIComponent("Choose a valid type"));
+        redirect("/applications/new?error=" + encodeURIComponent("Choose a valid type"));
     }
     if (deadline !== "" && !/^\d{4}-\d{2}-\d{2}$/.test(deadline)) {
-        redirect("/applications?error=" + encodeURIComponent("Deadline must be a valid date"));
+        redirect("/applications/new?error=" + encodeURIComponent("Deadline must be a valid date"));
     }
     if (organisation.length < 2 || organisation.length > 120) {
-        redirect("/applications?error=" + encodeURIComponent("Organisation must be 2 to 120 characters"));
+        redirect("/applications/new?error=" + encodeURIComponent("Organisation must be 2 to 120 characters"));
     }
     if (!allowedStatuses.includes(status)) {
-        redirect("/applications?error=" + encodeURIComponent("Choose a valid status"));
+        redirect("/applications/new?error=" + encodeURIComponent("Choose a valid status"));
     }
     if (sourceUrl !== "" && (sourceUrl.length > 500 || !/^https?:\/\//i.test(sourceUrl))) {
-        redirect("/applications?error=" + encodeURIComponent("Link must start with http:// or https://"));
+        redirect("/applications/new?error=" + encodeURIComponent("Link must start with http:// or https://"));
     }
     if (notes.length > 1000) {
-        redirect("/applications?error=" + encodeURIComponent("Notes must be 1000 characters or fewer"));
+        redirect("/applications/new?error=" + encodeURIComponent("Notes must be 1000 characters or fewer"));
     }
 
     const supabase = await createClient();
@@ -49,7 +49,7 @@ export async function addApplication(formData: FormData){
         notes: notes || null,
     });
     
-    if (error) redirect("/applications?error=" + encodeURIComponent(error.message));
+    if (error) redirect("/applications/new?error=" + encodeURIComponent(error.message));
     revalidatePath("/applications");
     redirect("/applications");
 }
