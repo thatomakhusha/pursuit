@@ -2,7 +2,7 @@
 
 **Your next opportunity, tracked.**
 
-Pursuit is a web app that helps students keep every application, bursary and deadline in one place, from school to first job. Built by **Thato Makhusha** (team **Mai Solutions**) for the **FNB App of the Year Hackathon 2026**, in response to the *access to higher education* challenge.
+Pursuit is a web app that helps students keep every application, bursary and deadline in one place, from school to first job. Built by **Thato Makhusha** (team **Mai Solutions - pronounced "My" **) for the **FNB App of the Year Hackathon 2026**, in response to the *access to higher education* challenge.
 
 **Live app:** https://pursuit-brown-ten.vercel.app/
 
