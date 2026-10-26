@@ -6,6 +6,7 @@ type ProfileProps = {
     stage: string;
     profileCompleted: boolean;
     saveProfile: (formData: FormData) => Promise<void>;
+    errorMessage: string;
 };
 
 export default function Profile({
@@ -14,6 +15,7 @@ export default function Profile({
     stage,
     profileCompleted,
     saveProfile,
+    errorMessage,
 }: ProfileProps) {
     const initial = displayName || email || "?";
 
@@ -47,7 +49,11 @@ export default function Profile({
                         <p className="text-sm text-gray-500">{email}</p>
                     </div>
                 </div>
-
+                {errorMessage && (
+                    <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                        {errorMessage}
+                    </div>
+                )}
                 <form action={saveProfile} className="space-y-6">
                     <div>
                         <label
