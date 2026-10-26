@@ -1,7 +1,11 @@
 
 import { Suspense } from "react";
 import AccountSettings from "@/components/settings/AccountSettings";
-import { changePassword, downloadData } from "./actions";
+import {
+    changePassword,
+    downloadData,
+    deleteAccount,
+} from "./actions";
 import { createClient } from "@/lib/supabase/server";
 import { connection } from "next/server";
 
@@ -9,6 +13,8 @@ type SettingsPageProps = {
     searchParams: Promise<{
         password?: string;
         password_error?: string;
+        delete_error?: string;
+        account?: string;
     }>;
 };
 
@@ -50,12 +56,25 @@ async function SettingsContent({
                   ? "We couldn't update your password. Please try again."
                   : "";
 
+    const deleteMessages: Record<string, string> = {
+        confirmation: 'Type DELETE exactly as shown to confirm account deletion.',
+        password: 'Your current password is incorrect.',
+        failed: 'We could not delete your account. Please try again.',
+        unavailable: 'Account deletion is temporarily unavailable. Please try again later.',
+    };
+
+    const deleteMessage = params.delete_error
+        ? deleteMessages[params.delete_error] ?? ''
+        : '';
+
     return (
         <AccountSettings
             email={user.email ?? ""}
             changePassword={changePassword}
             downloadData={downloadData}
+            deleteAccount={deleteAccount}
             passwordMessage={passwordMessage}
+            deleteMessage={deleteMessage}
         />
     );
 }

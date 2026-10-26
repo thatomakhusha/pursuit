@@ -1,6 +1,8 @@
 
 "use server";
 
+import "server-only";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -102,4 +104,84 @@ export async function downloadData(): Promise<{
             content: JSON.stringify(exportData, null, 2),
         },
     };
+}
+
+export async function deleteAccount(formData: FormData): Promise<void> {
+    const currentPassword = formData.get("current_password");
+    const confirmation = formData.get("delete_confirmation");
+
+    if (
+        typeof currentPassword !== "string" ||
+        currentPassword.length === 0 ||
+        typeof confirmation !== "string" ||
+        confirmation !== "DELETE"
+    ) {
+        redirect("/settings?delete_error=confirmation");
+    }
+
+    const supabase = await createClient();
+
+    const {
+        data: { user },
+        error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+        redirect("/login");
+    }
+
+    if (!user.email) {
+        redirect("/settings?delete_error=unavailable");
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !anonKey || !serviceRoleKey) {
+        redirect("/settings?delete_error=unavailable");
+    }
+
+    // Verify the password using a separate client so the current
+    // browser session is not replaced during verification.
+    const verifier = createSupabaseClient(supabaseUrl, anonKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+            detectSessionInUrl: false,
+        },
+    });
+
+    const { data: verified, error: verificationError } =
+        await verifier.auth.signInWithPassword({
+            email: user.email,
+            password: currentPassword,
+        });
+
+    if (
+        verificationError ||
+        verified.user?.id !== user.id
+    ) {
+        redirect("/settings?delete_error=password");
+    }
+
+    // Admin credentials are only used on the server.
+    const admin = createSupabaseClient(supabaseUrl, serviceRoleKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+            detectSessionInUrl: false,
+        },
+    });
+
+    const { error: deletionError } =
+        await admin.auth.admin.deleteUser(user.id);
+
+    if (deletionError) {
+        redirect("/settings?delete_error=failed");
+    }
+
+    await supabase.auth.signOut();
+
+    redirect("/login?account=deleted");
 }

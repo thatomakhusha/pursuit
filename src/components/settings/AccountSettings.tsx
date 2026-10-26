@@ -7,6 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 type AccountSettingsProps = {
     email: string;
     passwordMessage: string;
+    deleteAccount: (formData: FormData) => Promise<void>;
+    deleteMessage: string;
     changePassword: (formData: FormData) => Promise<void>;
     downloadData: () => Promise<{
         error?: string;
@@ -22,12 +24,15 @@ export default function AccountSettings({
     changePassword,
     downloadData,
     passwordMessage,
+    deleteMessage,
+    deleteAccount,
 }: AccountSettingsProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [downloadMessage, setDownloadMessage] = useState("");
     const [isDownloading, setIsDownloading] = useState(false);
-
+    const [showDeletePassword, setShowDeletePassword] = useState(false);
+    
     async function handleDownload() {
         setIsDownloading(true);
         setDownloadMessage("");
@@ -183,6 +188,87 @@ export default function AccountSettings({
                         {isDownloading ? "Preparing download..." : "Download my data"}
                     </button>
                 </div>
+                
+                <hr className="border-gray-200" />
+
+                <section className="space-y-4">
+                    <div>
+                        <h2 className="text-lg font-semibold text-red-700">
+                            Danger zone
+                        </h2>
+                        <p className="mt-1 text-sm text-gray-500">
+                            Permanently delete your Pursuit account, profile, tracked
+                            applications, and status history. This action cannot be undone.
+                        </p>
+                    </div>
+
+                    <form action={deleteAccount} className="space-y-4">
+                        <div>
+                            <label
+                                htmlFor="delete_current_password"
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                Current password
+                            </label>
+
+                            <span className="relative mt-1 block">
+                                <input
+                                    id="delete_current_password"
+                                    name="current_password"
+                                    type={showDeletePassword ? "text" : "password"}
+                                    required
+                                    autoComplete="current-password"
+                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                                    placeholder="Enter your current password"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowDeletePassword((visible) => !visible)}
+                                    aria-label={showDeletePassword ? "Hide password" : "Show password"}
+                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-900"
+                                >
+                                    {showDeletePassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </span>
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="delete_confirmation"
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                Type DELETE to confirm
+                            </label>
+
+                            <input
+                                id="delete_confirmation"
+                                name="delete_confirmation"
+                                type="text"
+                                required
+                                autoComplete="off"
+                                spellCheck={false}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                                placeholder="DELETE"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            onClick={(event) => {
+                                if (!window.confirm(
+                                    "Are you absolutely sure? Your account and all associated data will be permanently deleted."
+                                )) {
+                                    event.preventDefault();
+                                }
+                            }}
+                            className="rounded-xl bg-red-600 px-5 py-3 font-semibold text-white transition hover:bg-red-700"
+                        >
+                            Permanently delete account
+                        </button>
+                    </form>
+                </section>
+
 
                 {passwordMessage && (
                     <p
@@ -194,6 +280,12 @@ export default function AccountSettings({
                         }
                     >
                         {passwordMessage}
+                    </p>
+                )}
+
+                {deleteMessage && (
+                    <p role="alert" className="text-sm text-red-700">
+                        {deleteMessage}
                     </p>
                 )}
 
