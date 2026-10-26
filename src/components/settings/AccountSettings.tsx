@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 type AccountSettingsProps = {
     email: string;
@@ -22,6 +23,8 @@ export default function AccountSettings({
     downloadData,
     passwordMessage,
 }: AccountSettingsProps) {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [downloadMessage, setDownloadMessage] = useState("");
     const [isDownloading, setIsDownloading] = useState(false);
 
@@ -48,8 +51,9 @@ export default function AccountSettings({
             link.href = url;
             link.download = result.data.filename;
             link.click();
+            link.remove();
 
-            URL.revokeObjectURL(url);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         } catch {
             setDownloadMessage("We couldn't download your data. Try again.");
         } finally {
@@ -98,16 +102,28 @@ export default function AccountSettings({
                         >
                             New password
                         </label>
-                        <input
-                            id="new_password"
-                            name="new_password"
-                            type="password"
-                            required
-                            minLength={8}
-                            autoComplete="new-password"
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            placeholder="At least 8 characters"
-                        />
+                        <span className="relative mt-1 block">
+                            <input
+                                id="new_password"
+                                name="new_password"
+                                type={showPassword ? "text" : "password"}
+                                required
+                                minLength={8}
+                                autoComplete="new-password"
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                placeholder="At least 8 characters"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((visible) => !visible)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                aria-pressed={showPassword}
+                                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-900"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </span>
                     </div>
 
                     <div>
@@ -117,16 +133,28 @@ export default function AccountSettings({
                         >
                             Confirm new password
                         </label>
-                        <input
-                            id="confirm_password"
-                            name="confirm_password"
-                            type="password"
-                            required
-                            minLength={8}
-                            autoComplete="new-password"
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            placeholder="Enter the password again"
-                        />
+                        <span className="relative mt-1 block">
+                            <input
+                                id="confirm_password"
+                                name="confirm_password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                required
+                                minLength={8}
+                                autoComplete="new-password"
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 pr-12 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                placeholder="Enter the password again"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword((visible) => !visible)}
+                                aria-label={showConfirmPassword ? "Hide confirmation password" : "Show confirmation password"}
+                                aria-pressed={showConfirmPassword}
+                                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-900"
+                            >
+                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </span>
                     </div>
 
                     <button
