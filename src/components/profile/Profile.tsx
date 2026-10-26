@@ -1,3 +1,4 @@
+
 import { STAGES } from "@/lib/stages";
 
 type ProfileProps = {
@@ -5,6 +6,9 @@ type ProfileProps = {
     email: string;
     stage: string;
     profileCompleted: boolean;
+    linkedinUrl: string;
+    githubUrl: string;
+    portfolioUrl: string;
     saveProfile: (formData: FormData) => Promise<void>;
     errorMessage: string;
 };
@@ -14,10 +18,17 @@ export default function Profile({
     email,
     stage,
     profileCompleted,
+    linkedinUrl,
+    githubUrl,
+    portfolioUrl,
     saveProfile,
     errorMessage,
 }: ProfileProps) {
     const initial = displayName || email || "?";
+
+    const stageLabel = STAGES.find(
+        (option) => option.value === stage
+    )?.label;
 
     return (
         <main className="mx-auto max-w-3xl space-y-6">
@@ -32,7 +43,8 @@ export default function Profile({
 
             {!profileCompleted && (
                 <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-                    Welcome to Pursuit! Complete your profile to get started.
+                    Welcome to Pursuit. Tell us where you are so we can show
+                    what matters first.
                 </div>
             )}
 
@@ -46,14 +58,25 @@ export default function Profile({
                         <h2 className="text-lg font-semibold">
                             {displayName || "Complete your profile"}
                         </h2>
-                        <p className="text-sm text-gray-500">{email}</p>
+
+                        {stageLabel && (
+                            <p className="mt-1 text-sm font-medium text-primary-dark">
+                                {stageLabel}
+                            </p>
+                        )}
+
+                        <p className="mt-1 text-sm text-gray-500">
+                            {email}
+                        </p>
                     </div>
                 </div>
+
                 {errorMessage && (
                     <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
                         {errorMessage}
                     </div>
                 )}
+
                 <form action={saveProfile} className="space-y-6">
                     <div>
                         <label
@@ -117,6 +140,72 @@ export default function Profile({
                                 </option>
                             ))}
                         </select>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div>
+                            <h3 className="text-lg font-semibold">
+                                Online presence
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Add links you may want to use when applying
+                                for opportunities. All fields are optional.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="linkedin_url"
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                LinkedIn URL
+                            </label>
+                            <input
+                                id="linkedin_url"
+                                name="linkedin_url"
+                                type="url"
+                                maxLength={2048}
+                                defaultValue={linkedinUrl}
+                                placeholder="https://www.linkedin.com/in/your-profile"
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="github_url"
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                GitHub URL
+                            </label>
+                            <input
+                                id="github_url"
+                                name="github_url"
+                                type="url"
+                                maxLength={2048}
+                                defaultValue={githubUrl}
+                                placeholder="https://github.com/your-username"
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="portfolio_url"
+                                className="mb-2 block text-sm font-medium"
+                            >
+                                Portfolio / personal website
+                            </label>
+                            <input
+                                id="portfolio_url"
+                                name="portfolio_url"
+                                type="url"
+                                maxLength={2048}
+                                defaultValue={portfolioUrl}
+                                placeholder="https://your-website.com"
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            />
+                        </div>
                     </div>
 
                     <button
