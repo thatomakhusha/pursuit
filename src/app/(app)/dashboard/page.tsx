@@ -10,6 +10,7 @@ import ApplicationJourney from "@/components/ui/ApplicationJourney";
 import UpcomingDeadlines from "@/components/ui/UpcomingDeadlines";
 import Link from "next/link";
 import PipelineSummary from "@/components/ui/PipelineSummary";
+import { STAGES } from "@/lib/stages";
 
 async function DashboardContent(){
     await connection();
@@ -18,12 +19,19 @@ async function DashboardContent(){
 
     if (!user) redirect("/login");
     
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("display_name")
+        .select("display_name, stage")
         .eq("user_id", user.id)
         .maybeSingle();
+
+    if (profileError) throw profileError;
+
     const firstName = profile?.display_name?.split(" ")[0];
+
+    const currentStage = STAGES.find(
+        (option) => option.value === profile?.stage
+    )?.label;
 
     
 
@@ -52,7 +60,11 @@ async function DashboardContent(){
         <div>
             <PageHeader
                 title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
-                subtitle="Here's your application overview for today."
+                subtitle={
+                    currentStage
+                        ? `Your current stage: ${currentStage}`
+                        : "Here's your application overview for today."
+                }
             />
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <StatsCard icon={FileText} tint="bg-sky-50 text-sky-700" label="Total Applications" value={total} note={`${addedThisMonth} this month`} />
