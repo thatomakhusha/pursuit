@@ -1,4 +1,4 @@
-import { Target } from "lucide-react";
+import { Target, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -13,13 +13,27 @@ const Navbar = () => {
                         Pursuit
                     </span>
                 </Link>
-
+                <div className="hidden items-center gap-8 md:flex">
+                    <a
+                        href="#product"
+                        className="text-text-secondary hover:text-text-primary"
+                    >
+                        Product
+                    </a>
+                    <a
+                        href="#workflow"
+                        className="text-text-secondary hover:text-text-primary"
+                    >
+                        How it works
+                    </a>
+                </div>
                 <div className="flex items-center gap-4">
                     <a href="/login" className="text-text-secondary font-semibold hover:text-text-primary">
                         Log in
                     </a>
-                    <a href="/signup" className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover">
-                        Get Started
+                    <a href="/signup" className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary-hover">
+                        Start tracking 
+                        <ArrowRight size={12}/>
                     </a>
                 </div>
             </div>
